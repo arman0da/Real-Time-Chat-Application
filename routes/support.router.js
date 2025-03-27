@@ -1,7 +1,9 @@
+const { ApiNamespaceRouter } = require("./namespace.router");
+const { ApiRoomRouter } = require("./room.router");
 const router = require("express").Router();
-const { SupportController } = require("../controllers/support/support.controller");
 
-router.get("/", SupportController.renderChatRoom); // Define the route
+router.use("/namespace", ApiNamespaceRouter); 
+router.use("/room", ApiRoomRouter);
 
 module.exports = {
   SupportRouter: router,

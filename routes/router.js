@@ -1,8 +1,7 @@
 const { SupportRouter } = require("./support.router");
-
 const router = require("express").Router();
 
-router.use("/support", SupportRouter); // Register the support route
+router.use("/support", SupportRouter); 
 
 module.exports = {
   AllRoutes: router,

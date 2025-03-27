@@ -1,4 +1,4 @@
-const { NamespaceController } = require("../../http/controllers/support/namespace.controller");
+const { NamespaceController } = require("../controllers/support/namespace.controller.js");
 const router = require("express").Router();
 router.post("/add", NamespaceController.addNamespace)
 router.get("/list", NamespaceController.getListOfNamespaces)
