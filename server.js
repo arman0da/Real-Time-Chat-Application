@@ -12,7 +12,7 @@ dotenv.config();
 // Initialize Express app
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server);
+// const io = new Server(server);
 const port = process.env.PORT || 5000;
 
 // Connect to MongoDB
@@ -21,6 +21,8 @@ connectDB();
 
 // Import Routes
 const { AllRoutes } = require("./routes/router");
+const { initialSocket } = require("./utils/initSocket");
+const { socketHandler } = require("./socket.io");
 
 // Middleware
 app.use(express.json());
@@ -74,6 +76,8 @@ app.use( "/api-doc",
 app.use(AllRoutes);
 
 // Start Server
+const io = initialSocket(server);
+socketHandler(io);
 server.listen(port, () => {
   console.log(`🚀 Server is running on http://localhost:${port}`);
 });
