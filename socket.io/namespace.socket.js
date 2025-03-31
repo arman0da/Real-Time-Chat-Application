@@ -29,9 +29,26 @@ module.exports = class NamespaceSocketHandler {
               const rooms = namespace.rooms;
               socket.emit("roomList", rooms);
               socket.on("joinRoom", async roomName => {
-               console.log(roomName);
+                const lastRoom = Array.from(socket.rooms)[1]
+                if(lastRoom){
+                    socket.leave(lastRoom)
+                    await this.getCountOfOnlineUsers(namespace.endpoint, roomName)
+                }
+                socket.join(roomName)
+                await this.getCountOfOnlineUsers(namespace.endpoint, roomName)
+                const roomInfo = conversation.rooms.find(item => item.name == roomName)
+                console.log(roomInfo)
+                socket.emit("roomInfo", roomInfo)
+                socket.on("disconnect", async () => {
+                  await this.getCountOfOnlineUsers(namespace.endpoint, roomName)
+              })
             })
           });
       }
+  }
+
+  async getCountOfOnlineUsers(endpoint, roomName) {
+    const onlineUsers = await this.#io.of(`/${endpoint}`).in(roomName).allSockets()
+    this.#io.of(`/${endpoint}`).in(roomName).emit("countOfOnlineUsers", Array.from(onlineUsers).length)
   }
 };
