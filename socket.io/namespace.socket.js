@@ -1,26 +1,37 @@
-// module.exports = class NamespaceSocketHandler {
-//     #io;
-//     constructor(io) {
-//         this.#io = io;
-//     }
+const { ConversationModel } = require("../models/conversation");
 
-//     initConnection() {
-//         this.#io.on("connection", socket => {
-//             console.log(socket.rooms);
-//         });
-//     }
-// }
 module.exports = class NamespaceSocketHandler {
-    #io;
-    constructor(io) {
-      this.#io = io;
-    }
-  
+  #io;
+  constructor(io) {
+    this.#io = io;
+  }
+
     initConnection() {
-      this.#io.on("connection", (socket) => {
-        console.log("✅ Client Connected: ", socket.id); // Log when a client connects
-        console.log("🛠 Rooms:", socket.rooms); // Log rooms
-      });
-    }
-  };
-  
+    this.#io.on("connection", async socket => {
+      const namespaces = await ConversationModel.find(
+        {},
+        { title: 1, endpoint: 1, rooms: 1 }
+      ).sort({ _id: -1 });
+      socket.emit("namespacesList", namespaces);
+    });
+  }
+
+  async createNamespacesConnection() {
+      const namespaces = await ConversationModel.find(
+        {},
+        { title: 1, endpoint: 1, rooms: 1 }
+      ).sort({ _id: -1 });
+
+      for (const namespace of namespaces) {
+        this.#io.of(`/${namespace.endpoint}`).on("connection", async (socket) => {
+          const conversation = await ConversationModel.findOne({ endpoint: namespace.endpoint }, {endpoint: 1, rooms: 1}).sort({_id: -1})
+          socket.emit("roomList", conversation.rooms)
+              const rooms = namespace.rooms;
+              socket.emit("roomList", rooms);
+              socket.on("joinRoom", async roomName => {
+               console.log(roomName);
+            })
+          });
+      }
+  }
+};

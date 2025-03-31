@@ -1,11 +1,15 @@
-const socket = require("socket.io");
+const socketIO = require("socket.io");
+
 function initialSocket(httpServer) {
-  const io = socket(httpServer, {
+  const io = socketIO(httpServer, {
     cors: {
       origin: "*",
     },
   });
+
   return io;
 }
 
-module.exports = { initialSocket };
+module.exports = { 
+   initialSocket 
+};

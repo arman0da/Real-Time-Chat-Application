@@ -1,18 +1,17 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const http = require("http");
-const { Server } = require("socket.io");
+const path = require("path");
 const ExpressEjsLayouts = require("express-ejs-layouts");
 const swaggerUI = require("swagger-ui-express");
 const swaggerJsDoc = require("swagger-jsdoc");
+const { initialSocket } = require("./utils/initSocket");
 
 // Load environment variables
 dotenv.config();
 
 // Initialize Express app
 const app = express();
-const server = http.createServer(app);
-// const io = new Server(server);
 const port = process.env.PORT || 5000;
 
 // Connect to MongoDB
@@ -21,13 +20,13 @@ connectDB();
 
 // Import Routes
 const { AllRoutes } = require("./routes/router");
-const { initialSocket } = require("./utils/initSocket");
 const { socketHandler } = require("./socket.io");
 
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(__dirname + "/public"));
+// app.use(express.static(__dirname + "/public"));
+app.use(express.static(path.join(__dirname, "..", "public")));
 app.use(ExpressEjsLayouts);
 app.set("view engine", "ejs");
 app.set("views", "resource/views");
@@ -75,7 +74,8 @@ app.use( "/api-doc",
 // Use Routes
 app.use(AllRoutes);
 
-// Start Server
+// Start Server  
+const server = http.createServer(app);
 const io = initialSocket(server);
 socketHandler(io);
 server.listen(port, () => {

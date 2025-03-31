@@ -1,7 +1,7 @@
-@font-face {
+/* @font-face {
     font-family: 'Vazir';
-    src: url('Vazir.ttf');
-  }
+    src: url("/dist/Vazir.ttf") format("truetype");
+  } */
   
   body {
       display: flex;
@@ -9,7 +9,7 @@
       justify-content: center;
       min-height: 100vh;
       background: #27ae60;
-      font-family: 'Vazir';
+      font-family: '';
       font-size: 1em;
       color: #32465a;
       text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.004);

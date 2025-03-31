@@ -2,7 +2,9 @@ const {StatusCodes: HttpStatus} = require('http-status-codes');
 class SupportController {
     renderChatRoom(req, res, next) {
         try {
-            return res.render('chat.ejs');
+            return res.render('chat.ejs', {
+                error:undefined
+            });
         } catch (error) {
             next(error);  
         }
